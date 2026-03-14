@@ -1,0 +1,58 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+    container_name: aerochat-frontend
+    environment:
+      VITE_API_URL: http://localhost:3001
+      CHOKIDAR_USEPOLLING: 'true'
+    ports:
+      - '5173:5173'
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      backend:
+        condition: service_started
+
+  backend:
+    build:
+      context: ./backend
+    container_name: aerochat-backend
+    command: npm run dev
+    environment:
+      PORT: 3001
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: aerochat
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+    ports:
+      - '3001:3001'
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16-alpine
+    container_name: aerochat-db
+    environment:
+      POSTGRES_DB: aerochat
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d aerochat']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  postgres_data:

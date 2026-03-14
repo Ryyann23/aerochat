@@ -1,0 +1,301 @@
+.auth-shell {
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: minmax(320px, 1.05fr) minmax(320px, 0.95fr);
+  gap: 24px;
+  align-items: center;
+  width: min(100%, 1120px);
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.auth-card,
+.modal-card {
+  background: rgba(235, 238, 246, 0.9);
+  border: 2px solid rgba(255, 255, 255, 0.58);
+  border-radius: 24px;
+  box-shadow: 0 18px 30px rgba(77, 89, 173, 0.18);
+  backdrop-filter: blur(6px);
+}
+
+.auth-card {
+  min-height: min(520px, calc(100dvh - 96px));
+}
+
+.auth-brand-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 24px 28px;
+}
+
+.auth-logo {
+  width: min(360px, 100%);
+  margin: 0 auto 14px;
+}
+
+.auth-brand-copy {
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+}
+
+.auth-app-icon {
+  width: 96px;
+  height: 96px;
+  object-fit: contain;
+}
+
+.auth-brand-copy h1 {
+  margin: 0;
+  color: #4fc0d4;
+  font-family: 'Barlow', sans-serif;
+  font-size: clamp(1.8rem, 3.3vw, 2.7rem);
+}
+
+.auth-brand-copy p {
+  margin: 0;
+  max-width: 30rem;
+  color: #5c86cb;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.auth-form-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 24px 28px;
+}
+
+.auth-mode-switch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.auth-mode-button,
+.auth-submit-button,
+.group-picker-button,
+.sidebar-manage-button,
+.group-leave-button,
+.panel-secondary-button {
+  border: 2px solid rgba(255, 255, 255, 0.72);
+  border-radius: 16px;
+  font-weight: 700;
+}
+
+.auth-mode-button {
+  min-height: 52px;
+  color: #5e8ed7;
+  background: rgba(255, 255, 255, 0.65);
+}
+
+.auth-mode-button.active,
+.auth-submit-button,
+.group-picker-button.join,
+.sidebar-manage-button {
+  color: #ffffff;
+  background: linear-gradient(180deg, #63cde0 0%, #4ea6e7 100%);
+}
+
+.auth-form {
+  display: grid;
+  gap: 12px;
+}
+
+.auth-field {
+  display: grid;
+  gap: 8px;
+}
+
+.auth-field span {
+  color: #5f85c7;
+  font-weight: 700;
+}
+
+.auth-field input {
+  border: 2px solid rgba(123, 219, 225, 0.22);
+  border-radius: 16px;
+  min-height: 48px;
+  padding: 0 14px;
+  color: #437dc1;
+  background: rgba(250, 252, 255, 0.85);
+}
+
+.auth-error {
+  margin: 0;
+  color: #d84b5c;
+  font-weight: 700;
+}
+
+.auth-submit-button {
+  min-height: 50px;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(49, 69, 135, 0.24);
+  backdrop-filter: blur(5px);
+  z-index: 30;
+}
+
+.group-picker-modal {
+  width: min(100%, 920px);
+  max-height: min(88dvh, 760px);
+  padding: 22px;
+  display: grid;
+  gap: 18px;
+  overflow: auto;
+}
+
+.group-picker-inline-shell {
+  height: 100%;
+  min-height: 0;
+}
+
+.group-picker-modal-inline {
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  border-radius: 12px;
+  padding: clamp(12px, 1.6vw, 18px);
+  gap: 14px;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+}
+
+.group-picker-modal-inline .group-picker-grid {
+  min-height: 0;
+  overflow-y: auto;
+  align-content: start;
+  padding-right: 4px;
+}
+
+.group-picker-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: start;
+}
+
+.group-picker-header h2 {
+  margin: 0;
+  color: #53c1d6;
+  font-family: 'Barlow', sans-serif;
+  font-size: 2rem;
+}
+
+.group-picker-header p,
+.group-picker-hint {
+  margin: 4px 0 0;
+  color: #6389c7;
+}
+
+.modal-close-button {
+  min-width: 140px;
+}
+
+.group-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.group-picker-item {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid rgba(255, 255, 255, 0.72);
+}
+
+.group-picker-item.joined {
+  box-shadow: inset 0 0 0 1px rgba(83, 193, 214, 0.22);
+}
+
+.group-picker-title {
+  display: grid;
+  grid-template-columns: 38px 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+.group-picker-icon {
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+}
+
+.group-picker-title strong {
+  display: block;
+  color: #5789cf;
+}
+
+.group-picker-title span,
+.group-picker-meta {
+  color: #6a8fcb;
+  font-size: 0.9rem;
+}
+
+.group-picker-meta {
+  display: flex;
+  gap: 16px;
+}
+
+.group-picker-button {
+  min-height: 46px;
+  color: #ffffff;
+}
+
+.group-picker-button.leave,
+.group-leave-button,
+.panel-secondary-button {
+  background: linear-gradient(180deg, #ef7575 0%, #dc5151 100%);
+  color: #ffffff;
+}
+
+.sidebar-empty {
+  color: #6a8fcb;
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.sidebar-card-footer {
+  margin-top: 12px;
+}
+
+.sidebar-manage-button,
+.panel-secondary-button {
+  width: 100%;
+  min-height: 40px;
+}
+
+@media (max-width: 960px) {
+  .auth-shell {
+    grid-template-columns: 1fr;
+    align-items: center;
+    padding: 16px;
+  }
+
+  .auth-card {
+    min-height: auto;
+  }
+
+  .group-picker-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .group-picker-header {
+    flex-direction: column;
+  }
+}
