@@ -15,7 +15,7 @@ router.post('/register', async (request, response) => {
   const password = request.body.password?.trim();
 
   if (!username || !password) {
-    return response.status(400).json({ error: 'Usuario e senha sao obrigatorios.' });
+    return response.status(400).json({ error: 'Usuário e senha são obrigatórios.' });
   }
 
   const existingUser = await query(
@@ -24,7 +24,7 @@ router.post('/register', async (request, response) => {
   );
 
   if (existingUser.rows.length > 0) {
-    return response.status(409).json({ error: 'Ja existe um usuario com esse nome.' });
+    return response.status(409).json({ error: 'Já existe um usuário com esse nome.' });
   }
 
   try {
@@ -46,7 +46,7 @@ router.post('/register', async (request, response) => {
     return response.status(201).json(sanitizeUser(result.rows[0]));
   } catch (error) {
     if (error.code === '23505') {
-      return response.status(409).json({ error: 'Ja existe um usuario com esse nome.' });
+      return response.status(409).json({ error: 'Já existe um usuário com esse nome.' });
     }
 
     throw error;
@@ -58,7 +58,7 @@ router.post('/login', async (request, response) => {
   const password = request.body.password?.trim();
 
   if (!username || !password) {
-    return response.status(400).json({ error: 'Usuario e senha sao obrigatorios.' });
+    return response.status(400).json({ error: 'Usuário e senha são obrigatórios.' });
   }
 
   const result = await query(
@@ -73,7 +73,7 @@ router.post('/login', async (request, response) => {
   );
 
   if (result.rows.length === 0) {
-    return response.status(401).json({ error: 'Credenciais invalidas.' });
+    return response.status(401).json({ error: 'Credenciais inválidas.' });
   }
 
   await query('UPDATE users SET status = $2 WHERE id = $1', [result.rows[0].id, 'online']);
@@ -88,7 +88,7 @@ router.post('/logout', async (request, response) => {
   const userId = parseId(request.body.userId);
 
   if (!userId) {
-    return response.status(400).json({ error: 'userId obrigatorio.' });
+    return response.status(400).json({ error: 'userId obrigatório.' });
   }
 
   await query('UPDATE users SET status = $2 WHERE id = $1', [userId, 'offline']);

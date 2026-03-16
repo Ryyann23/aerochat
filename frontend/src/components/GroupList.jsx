@@ -6,7 +6,7 @@ function GroupList({ groups, selectedGroupId, onSelectGroup }) {
       <h2>Grupos</h2>
       <div className="sidebar-list">
         {groups.length === 0 && (
-          <p className="sidebar-empty">Voce ainda nao entrou em nenhum grupo.</p>
+          <p className="sidebar-empty">Você ainda não entrou em nenhum grupo.</p>
         )}
 
         {groups.map((group) => {

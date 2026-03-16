@@ -17,13 +17,13 @@ router.get('/:id/profile', async (request, response) => {
   const userId = parseId(request.params.id);
 
   if (!userId) {
-    return response.status(400).json({ error: 'userId invalido.' });
+    return response.status(400).json({ error: 'userId inválido.' });
   }
 
   const user = await findUserById(userId);
 
   if (!user) {
-    return response.status(404).json({ error: 'Usuario nao encontrado.' });
+    return response.status(404).json({ error: 'Usuário não encontrado.' });
   }
 
   return response.json(sanitizeUser(user));
@@ -41,13 +41,13 @@ router.patch('/:id/profile', async (request, response) => {
   const newPassword = request.body.newPassword?.trim();
 
   if (!userId) {
-    return response.status(400).json({ error: 'userId invalido.' });
+    return response.status(400).json({ error: 'userId inválido.' });
   }
 
   const user = await findUserById(userId);
 
   if (!user) {
-    return response.status(404).json({ error: 'Usuario nao encontrado.' });
+    return response.status(404).json({ error: 'Usuário não encontrado.' });
   }
 
   const updates = [];
@@ -55,7 +55,7 @@ router.patch('/:id/profile', async (request, response) => {
 
   if (username !== null) {
     if (!username) {
-      return response.status(400).json({ error: 'Nome de usuario nao pode estar vazio.' });
+      return response.status(400).json({ error: 'Nome de usuário não pode estar vazio.' });
     }
 
     const existingUser = await query(
@@ -64,7 +64,7 @@ router.patch('/:id/profile', async (request, response) => {
     );
 
     if (existingUser.rows.length > 0) {
-      return response.status(409).json({ error: 'Ja existe um usuario com esse nome.' });
+      return response.status(409).json({ error: 'Já existe um usuário com esse nome.' });
     }
 
     values.push(username);
@@ -76,7 +76,7 @@ router.patch('/:id/profile', async (request, response) => {
 
   if (avatarColor !== null) {
     if (!isValidAvatarColor(avatarColor)) {
-      return response.status(400).json({ error: 'Cor de avatar invalida. Use formato #RRGGBB.' });
+      return response.status(400).json({ error: 'Cor de avatar inválida. Use o formato #RRGGBB.' });
     }
 
     values.push(avatarColor.toUpperCase());
@@ -85,7 +85,7 @@ router.patch('/:id/profile', async (request, response) => {
 
   if (bubbleColor !== null) {
     if (!isValidBubbleColor(bubbleColor)) {
-      return response.status(400).json({ error: 'Cor do balao invalida. Use formato #RRGGBB.' });
+      return response.status(400).json({ error: 'Cor do balão inválida. Use o formato #RRGGBB.' });
     }
 
     values.push(bubbleColor.toUpperCase());
@@ -108,7 +108,7 @@ router.patch('/:id/profile', async (request, response) => {
   }
 
   if (updates.length === 0) {
-    return response.status(400).json({ error: 'Nenhuma alteracao valida foi enviada.' });
+    return response.status(400).json({ error: 'Nenhuma alteração válida foi enviada.' });
   }
 
   values.push(userId);

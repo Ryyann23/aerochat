@@ -102,11 +102,12 @@ async function ensureSchema() {
     `
       INSERT INTO groups (id, name, description, icon)
       VALUES
-        (1, 'Hangar', 'Discussao principal do grupo', $1),
-        (2, 'Pilotos', 'Canal para combinados da equipe de voo', $1),
-        (3, 'Torre', 'Avisos rapidos da operacao', $1),
-        (4, 'Meteorologia', 'Condicoes do tempo e previsoes', $1),
-        (5, 'Manutencao', 'Demandas tecnicas e suporte', $1)
+        (1, 'Odeio acordar cedo', 'Pra quem negocia com o despertador todo santo dia.', $1),
+        (2, 'Abro a geladeira pra pensar', 'Você não está com fome, só em busca de respostas.', $1),
+        (3, 'Queria sorvete mas era feijão', 'Grupo de apoio para todas as decepções culinárias.', $1),
+        (4, 'Eu só vim pelo bolo', 'Presença confirmada em qualquer evento com comida grátis.', $1),
+        (5, 'Tenho preguiça até de ter preguiça', 'Nível máximo de cansaço com zero esforço envolvido.', $1),
+        (6, 'Não sou antissocial, só sem bateria social', 'Hoje não, pessoal. Talvez amanhã. Ou semana que vem.', $1)
       ON CONFLICT (id) DO UPDATE
       SET name = EXCLUDED.name,
           description = EXCLUDED.description,

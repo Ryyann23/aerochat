@@ -25,7 +25,7 @@ function ProfilePanel({ currentUser, onClose, onProfileUpdated }) {
 
   const createdAtLabel = useMemo(() => {
     if (!currentUser.createdAt) {
-      return 'Nao informado';
+      return 'Não informado';
     }
 
     return new Date(currentUser.createdAt).toLocaleString('pt-BR', {
@@ -61,7 +61,7 @@ function ProfilePanel({ currentUser, onClose, onProfileUpdated }) {
     const trimmedUsername = formData.username.trim();
 
     if (!trimmedUsername) {
-      setErrorMessage('O nome de usuario nao pode ficar vazio.');
+      setErrorMessage('O nome de usuário não pode ficar vazio.');
       setIsSaving(false);
       return;
     }
@@ -92,7 +92,7 @@ function ProfilePanel({ currentUser, onClose, onProfileUpdated }) {
     }
 
     if (Object.keys(payload).length === 0) {
-      setErrorMessage('Nenhuma alteracao para salvar.');
+      setErrorMessage('Nenhuma alteração para salvar.');
       setIsSaving(false);
       return;
     }
@@ -110,7 +110,7 @@ function ProfilePanel({ currentUser, onClose, onProfileUpdated }) {
       }));
       setSuccessMessage('Perfil atualizado com sucesso.');
     } catch (error) {
-      setErrorMessage(error.response?.data?.error || 'Nao foi possivel atualizar o perfil.');
+      setErrorMessage(error.response?.data?.error || 'Não foi possível atualizar o perfil.');
     } finally {
       setIsSaving(false);
     }
@@ -145,7 +145,7 @@ function ProfilePanel({ currentUser, onClose, onProfileUpdated }) {
 
             <dl className="profile-overview-list">
               <div>
-                <dt>Usuario</dt>
+                <dt>Nome do Usuário</dt>
                 <dd>{currentUser.name}</dd>
               </div>
               <div>
@@ -161,7 +161,7 @@ function ProfilePanel({ currentUser, onClose, onProfileUpdated }) {
 
           <form className="profile-panel-card profile-form" onSubmit={handleSubmit}>
             <label className="profile-field">
-              <span>Nome de usuario</span>
+              <span>Nome de usuário</span>
               <input
                 type="text"
                 value={formData.username}
@@ -190,7 +190,7 @@ function ProfilePanel({ currentUser, onClose, onProfileUpdated }) {
             </label>
 
             <label className="profile-field">
-              <span>Cor do balao da mensagem</span>
+              <span>Cor do balão da mensagem</span>
               <div className="profile-color-field">
                 <input
                   type="color"
@@ -213,7 +213,7 @@ function ProfilePanel({ currentUser, onClose, onProfileUpdated }) {
                 type="password"
                 value={formData.currentPassword}
                 onChange={(event) => handleChange('currentPassword', event.target.value)}
-                placeholder="Obrigatoria para trocar senha"
+                placeholder="Obrigatória para trocar senha"
               />
             </label>
 
@@ -231,7 +231,7 @@ function ProfilePanel({ currentUser, onClose, onProfileUpdated }) {
             {successMessage && <p className="profile-feedback success">{successMessage}</p>}
 
             <button type="submit" className="action-button primary" disabled={isSaving}>
-              {isSaving ? 'Salvando...' : 'Salvar alteracoes'}
+              {isSaving ? 'Salvando...' : 'Salvar alterações'}
             </button>
           </form>
         </div>

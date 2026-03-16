@@ -3,7 +3,7 @@ import groupsButton from '../assets/img/bttn_groups.png';
 import musicButton from '../assets/img/bttn_change_music.png';
 import backgroundButton from '../assets/img/bttn_change_bg.png';
 
-function UserPanel({ onOpenProfile, onOpenGroupPicker, onChangeBackground, onLogout }) {
+function UserPanel({ onOpenProfile, onOpenGroupPicker, onChangeMusic, onChangeBackground, onLogout }) {
   return (
     <aside className="right-sidebar">
       <div className="sidebar-card action-panel">
@@ -23,8 +23,13 @@ function UserPanel({ onOpenProfile, onOpenGroupPicker, onChangeBackground, onLog
         >
           <img src={groupsButton} alt="Grupos" className="icon-action-image" />
         </button>
-        <button type="button" className="icon-action-button" aria-label="Trocar musica">
-          <img src={musicButton} alt="Trocar musica" className="icon-action-image" />
+        <button
+          type="button"
+          className="icon-action-button"
+          aria-label="Trocar música"
+          onClick={onChangeMusic}
+        >
+          <img src={musicButton} alt="Trocar música" className="icon-action-image" />
         </button>
         <button
           type="button"

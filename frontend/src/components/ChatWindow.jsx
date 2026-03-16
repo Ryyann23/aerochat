@@ -62,7 +62,7 @@ function ChatWindow({
         <div className="chat-header-top">
           <div>
             <h2>{group?.name || 'Escolha um grupo'}</h2>
-            <p>{group?.description || 'Entre em um grupo para comecar a conversar.'}</p>
+            <p>{group?.description || 'Entre em um grupo para começar a conversar.'}</p>
           </div>
           {group && (currentUserRole === 2 || currentUserIsAdmin) && (
             <button

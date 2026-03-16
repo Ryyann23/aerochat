@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import api from '../api';
 import logo from '../assets/img/logo.png';
 import appIcon from '../assets/img/app_icon.png';
+import { ensureBgmStarted } from '../bgmPlayer';
 
 function AuthPage({ onAuthenticated }) {
   const [mode, setMode] = useState('login');
@@ -11,6 +12,28 @@ function AuthPage({ onAuthenticated }) {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+
+  useEffect(() => {
+    const tryPlay = () => {
+      ensureBgmStarted().catch(() => {
+      });
+    };
+
+    const handleFirstInteraction = () => {
+      tryPlay();
+      window.removeEventListener('pointerdown', handleFirstInteraction);
+      window.removeEventListener('keydown', handleFirstInteraction);
+    };
+
+    tryPlay();
+    window.addEventListener('pointerdown', handleFirstInteraction);
+    window.addEventListener('keydown', handleFirstInteraction);
+
+    return () => {
+      window.removeEventListener('pointerdown', handleFirstInteraction);
+      window.removeEventListener('keydown', handleFirstInteraction);
+    };
+  }, []);
 
   const handleChange = (field, value) => {
     setFormData((currentData) => ({
@@ -34,7 +57,7 @@ function AuthPage({ onAuthenticated }) {
       const response = await api.post(endpoint, payload);
       onAuthenticated(response.data);
     } catch (error) {
-      setErrorMessage(error.response?.data?.error || 'Nao foi possivel concluir a autenticacao.');
+      setErrorMessage(error.response?.data?.error || 'Não foi possível concluir a autenticação.');
     } finally {
       setIsSubmitting(false);
     }
@@ -74,12 +97,12 @@ function AuthPage({ onAuthenticated }) {
 
         <form className="auth-form" onSubmit={handleSubmit}>
           <label className="auth-field">
-            <span>Usuario</span>
+            <span>Usuário</span>
             <input
               type="text"
               value={formData.username}
               onChange={(event) => handleChange('username', event.target.value)}
-              placeholder="Seu usuario no AeroChat"
+              placeholder="Seu usuário no AeroChat"
               required
             />
           </label>

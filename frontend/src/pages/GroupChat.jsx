@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import api from '../api';
+import { ensureBgmStarted, isBgmPaused, playNextBgm } from '../bgmPlayer';
 import GroupList from '../components/GroupList';
 import MemberList from '../components/MemberList';
 import ChatWindow from '../components/ChatWindow';
@@ -72,7 +73,7 @@ function GroupChat({ currentUser, onLogout, onCurrentUserChange }) {
     };
 
     loadProfile().catch((error) => {
-      console.error('Erro ao carregar perfil do usuario', error);
+      console.error('Erro ao carregar perfil do usuário', error);
     });
   }, [currentUser.id, onCurrentUserChange]);
 
@@ -177,7 +178,7 @@ function GroupChat({ currentUser, onLogout, onCurrentUserChange }) {
 
     eventSource.addEventListener('group-update', syncGroupData);
     eventSource.onerror = (error) => {
-      console.error('Erro de conexao em tempo real', error);
+      console.error('Erro de conexão em tempo real', error);
     };
 
     return () => {
@@ -238,6 +239,38 @@ function GroupChat({ currentUser, onLogout, onCurrentUserChange }) {
     setBackgroundIndex((currentIndex) => (currentIndex + 1) % backgrounds.length);
   };
 
+  const handleChangeMusic = () => {
+    playNextBgm().catch((error) => {
+      console.error('Erro ao trocar música', error);
+    });
+  };
+
+  useEffect(() => {
+    const ensurePlayback = () => {
+      ensureBgmStarted().catch(() => {
+      });
+    };
+
+    ensurePlayback();
+
+    const handleFirstInteraction = () => {
+      if (isBgmPaused()) {
+        ensurePlayback();
+      }
+
+      window.removeEventListener('pointerdown', handleFirstInteraction);
+      window.removeEventListener('keydown', handleFirstInteraction);
+    };
+
+    window.addEventListener('pointerdown', handleFirstInteraction);
+    window.addEventListener('keydown', handleFirstInteraction);
+
+    return () => {
+      window.removeEventListener('pointerdown', handleFirstInteraction);
+      window.removeEventListener('keydown', handleFirstInteraction);
+    };
+  }, []);
+
   const handleJoinGroup = async (groupId) => {
     setIsUpdatingGroups(true);
 
@@ -278,7 +311,7 @@ function GroupChat({ currentUser, onLogout, onCurrentUserChange }) {
     try {
       await api.post('/auth/logout', { userId: currentUser.id });
     } catch (error) {
-      console.error('Erro ao sair da sessao', error);
+      console.error('Erro ao sair da sessão', error);
     } finally {
       onLogout();
     }
@@ -440,7 +473,7 @@ function GroupChat({ currentUser, onLogout, onCurrentUserChange }) {
       return;
     }
 
-    const nextDescription = window.prompt('Nova descricao do grupo:', groupDetails.description || '');
+    const nextDescription = window.prompt('Nova descrição do grupo:', groupDetails.description || '');
     if (!nextDescription?.trim()) {
       return;
     }
@@ -516,48 +549,50 @@ function GroupChat({ currentUser, onLogout, onCurrentUserChange }) {
         </aside>
 
         <section className={`chat-column ${isOverlayViewOpen ? 'group-picker-open' : ''}`}>
-          {shouldShowProfile ? (
-            <ProfilePanel
-              currentUser={currentUser}
-              onClose={() => setViewMode(joinedGroups.length === 0 ? 'groups' : 'chat')}
-              onProfileUpdated={handleProfileUpdated}
-            />
-          ) : shouldShowGroupPicker ? (
-            <GroupPickerModal
-              groups={groups}
-              onJoinGroup={handleJoinGroup}
-              onLeaveGroup={handleLeaveGroup}
-              onClose={() => {
-                setShowGroupPicker(false);
-                setViewMode('chat');
-              }}
-              canClose={joinedGroups.length > 0}
-              isSaving={isUpdatingGroups}
-              inline
-            />
-          ) : (
-            <>
-              <ChatWindow
-                group={groupDetails}
-                messages={messages}
-                members={members}
-                loading={loading}
-                currentUserRole={currentUserRole}
-                currentUserIsAdmin={Boolean(currentUser.isAdmin)}
-                currentUserId={currentUser.id}
-                onEditGroup={handleEditGroup}
-                onDeleteMessage={handleDeleteMessage}
-                deletingMessageId={deletingMessageId}
-              />
-              <MessageInput
-                value={draft}
-                onChange={setDraft}
-                onClear={() => setDraft('')}
-                onSend={handleSendMessage}
-                isSending={isSending}
-                disabled={!groupDetails}
-              />
-            </>
+          <ChatWindow
+            group={groupDetails}
+            messages={messages}
+            members={members}
+            loading={loading}
+            currentUserRole={currentUserRole}
+            currentUserIsAdmin={Boolean(currentUser.isAdmin)}
+            currentUserId={currentUser.id}
+            onEditGroup={handleEditGroup}
+            onDeleteMessage={handleDeleteMessage}
+            deletingMessageId={deletingMessageId}
+          />
+          <MessageInput
+            value={draft}
+            onChange={setDraft}
+            onClear={() => setDraft('')}
+            onSend={handleSendMessage}
+            isSending={isSending}
+            disabled={!groupDetails || isOverlayViewOpen}
+          />
+
+          {isOverlayViewOpen && (
+            <div className="chat-overlay-shell" role="dialog" aria-modal="true">
+              {shouldShowProfile ? (
+                <ProfilePanel
+                  currentUser={currentUser}
+                  onClose={() => setViewMode(joinedGroups.length === 0 ? 'groups' : 'chat')}
+                  onProfileUpdated={handleProfileUpdated}
+                />
+              ) : (
+                <GroupPickerModal
+                  groups={groups}
+                  onJoinGroup={handleJoinGroup}
+                  onLeaveGroup={handleLeaveGroup}
+                  onClose={() => {
+                    setShowGroupPicker(false);
+                    setViewMode('chat');
+                  }}
+                  canClose={joinedGroups.length > 0}
+                  isSaving={isUpdatingGroups}
+                  inline
+                />
+              )}
+            </div>
           )}
         </section>
 
@@ -571,6 +606,7 @@ function GroupChat({ currentUser, onLogout, onCurrentUserChange }) {
             setViewMode('groups');
           }}
           onChangeBackground={handleChangeBackground}
+          onChangeMusic={handleChangeMusic}
           onLogout={handleLogout}
         />
       </section>

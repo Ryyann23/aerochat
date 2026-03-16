@@ -27,7 +27,7 @@ router.get('/groups/:id/stream', async (request, response) => {
   const userId = parseId(request.query.userId);
 
   if (!groupId || !userId) {
-    return response.status(400).json({ error: 'groupId e userId sao obrigatorios.' });
+    return response.status(400).json({ error: 'groupId e userId são obrigatórios.' });
   }
 
   const membership = await hasMembership(userId, groupId);
@@ -99,17 +99,17 @@ router.post('/groups/:id/join', async (request, response) => {
   const userId = parseId(request.body.userId);
 
   if (!groupId || !userId) {
-    return response.status(400).json({ error: 'groupId e userId sao obrigatorios.' });
+    return response.status(400).json({ error: 'groupId e userId são obrigatórios.' });
   }
 
   const user = await findUserById(userId);
   if (!user) {
-    return response.status(404).json({ error: 'Usuario nao encontrado.' });
+    return response.status(404).json({ error: 'Usuário não encontrado.' });
   }
 
   const banned = await hasBan(userId, groupId);
   if (banned) {
-    return response.status(403).json({ error: 'Voce foi banido deste grupo.' });
+    return response.status(403).json({ error: 'Você foi banido deste grupo.' });
   }
 
   const insertMembershipResult = await query(
@@ -135,7 +135,7 @@ router.delete('/groups/:id/leave', async (request, response) => {
   const userId = parseId(request.query.userId || request.body?.userId);
 
   if (!groupId || !userId) {
-    return response.status(400).json({ error: 'groupId e userId sao obrigatorios.' });
+    return response.status(400).json({ error: 'groupId e userId são obrigatórios.' });
   }
 
   const user = await findUserById(userId);
@@ -155,7 +155,7 @@ router.delete('/groups/:groupId/messages/:messageId', async (request, response) 
   const actorUserId = parseId(request.query.userId || request.body?.userId);
 
   if (!groupId || !messageId || !actorUserId) {
-    return response.status(400).json({ error: 'groupId, messageId e userId sao obrigatorios.' });
+    return response.status(400).json({ error: 'groupId, messageId e userId são obrigatórios.' });
   }
 
   const actorMembership = await getMembership(actorUserId, groupId);
@@ -176,11 +176,11 @@ router.delete('/groups/:groupId/messages/:messageId', async (request, response) 
 
   const message = messageResult.rows[0];
   if (!message) {
-    return response.status(404).json({ error: 'Mensagem nao encontrada.' });
+    return response.status(404).json({ error: 'Mensagem não encontrada.' });
   }
 
   if (message.isSystem) {
-    return response.status(403).json({ error: 'Mensagens de sistema nao podem ser removidas.' });
+    return response.status(403).json({ error: 'Mensagens de sistema não podem ser removidas.' });
   }
 
   const targetMembership = await getMembership(message.userId, groupId);
@@ -190,12 +190,12 @@ router.delete('/groups/:groupId/messages/:messageId', async (request, response) 
     const actorRole = actorIsAdmin ? ROLE_ADMIN : actorMembership.role;
 
     if (!canActOnTarget(actorRole, targetRole)) {
-      return response.status(403).json({ error: 'Sem permissao para apagar esta mensagem.' });
+      return response.status(403).json({ error: 'Sem permissão para apagar esta mensagem.' });
     }
   }
 
   if (targetRole === ROLE_ADMIN && !actorIsAdmin && actorUserId !== message.userId) {
-    return response.status(403).json({ error: 'Sem permissao para apagar esta mensagem.' });
+    return response.status(403).json({ error: 'Sem permissão para apagar esta mensagem.' });
   }
 
   await query('DELETE FROM group_messages WHERE id = $1', [messageId]);
@@ -210,11 +210,11 @@ router.post('/groups/:groupId/members/:targetUserId/mute', async (request, respo
   const durationMinutes = Number(request.body.durationMinutes || 10);
 
   if (!groupId || !targetUserId || !actorUserId) {
-    return response.status(400).json({ error: 'groupId, targetUserId e userId sao obrigatorios.' });
+    return response.status(400).json({ error: 'groupId, targetUserId e userId são obrigatórios.' });
   }
 
   if (!Number.isFinite(durationMinutes) || durationMinutes <= 0) {
-    return response.status(400).json({ error: 'durationMinutes invalido.' });
+    return response.status(400).json({ error: 'durationMinutes inválido.' });
   }
 
   const actorMembership = await getMembership(actorUserId, groupId);
@@ -222,17 +222,17 @@ router.post('/groups/:groupId/members/:targetUserId/mute', async (request, respo
   const targetMembership = await getMembership(targetUserId, groupId);
 
   if ((!actorMembership && !actorIsAdmin) || !targetMembership) {
-    return response.status(404).json({ error: 'Membro nao encontrado no grupo.' });
+    return response.status(404).json({ error: 'Membro não encontrado no grupo.' });
   }
 
   const actorRole = actorIsAdmin ? ROLE_ADMIN : actorMembership.role;
   if (!canActOnTarget(actorRole, targetMembership.role)) {
-    return response.status(403).json({ error: 'Sem permissao para mutar este usuario.' });
+    return response.status(403).json({ error: 'Sem permissão para mutar este usuário.' });
   }
 
   const targetUser = await findUserById(targetUserId);
   if (targetUser?.is_admin && !actorIsAdmin) {
-    return response.status(403).json({ error: 'Nao e possivel mutar um admin.' });
+    return response.status(403).json({ error: 'Não é possível mutar um admin.' });
   }
 
   const actorUser = await findUserById(actorUserId);
@@ -250,7 +250,7 @@ router.post('/groups/:groupId/members/:targetUserId/mute', async (request, respo
   await createSystemMessage(
     groupId,
     actorUserId,
-    `${targetUser?.name || 'Usuario'} foi mutado por ${actorUser?.name || 'moderacao'} por ${durationMinutes} minuto(s).`,
+    `${targetUser?.name || 'Usuário'} foi mutado por ${actorUser?.name || 'moderação'} por ${durationMinutes} minuto(s).`,
   );
 
   publishGroupEvent(groupId, 'group-update', { type: 'member-muted', targetUserId });
@@ -265,7 +265,7 @@ router.post('/groups/:groupId/members/:targetUserId/ban', async (request, respon
   const reason = request.body.reason?.trim() || null;
 
   if (!groupId || !targetUserId || !actorUserId) {
-    return response.status(400).json({ error: 'groupId, targetUserId e userId sao obrigatorios.' });
+    return response.status(400).json({ error: 'groupId, targetUserId e userId são obrigatórios.' });
   }
 
   const actorMembership = await getMembership(actorUserId, groupId);
@@ -273,17 +273,17 @@ router.post('/groups/:groupId/members/:targetUserId/ban', async (request, respon
   const targetMembership = await getMembership(targetUserId, groupId);
 
   if ((!actorMembership && !actorIsAdmin) || !targetMembership) {
-    return response.status(404).json({ error: 'Membro nao encontrado no grupo.' });
+    return response.status(404).json({ error: 'Membro não encontrado no grupo.' });
   }
 
   const actorRole = actorIsAdmin ? ROLE_ADMIN : actorMembership.role;
   if (!canActOnTarget(actorRole, targetMembership.role)) {
-    return response.status(403).json({ error: 'Sem permissao para banir este usuario.' });
+    return response.status(403).json({ error: 'Sem permissão para banir este usuário.' });
   }
 
   const targetUser = await findUserById(targetUserId);
   if (targetUser?.is_admin && !actorIsAdmin) {
-    return response.status(403).json({ error: 'Nao e possivel banir um admin.' });
+    return response.status(403).json({ error: 'Não é possível banir um admin.' });
   }
 
   const actorUser = await findUserById(actorUserId);
@@ -308,7 +308,7 @@ router.post('/groups/:groupId/members/:targetUserId/ban', async (request, respon
   await createSystemMessage(
     groupId,
     actorUserId,
-    `${targetUser?.name || 'Usuario'} foi banido por ${actorUser?.name || 'moderacao'}.`,
+    `${targetUser?.name || 'Usuário'} foi banido por ${actorUser?.name || 'moderação'}.`,
   );
 
   publishGroupEvent(groupId, 'group-update', { type: 'member-banned', targetUserId });
@@ -322,7 +322,7 @@ router.post('/groups/:groupId/members/:targetUserId/expel', async (request, resp
   const actorUserId = parseId(request.body.userId);
 
   if (!groupId || !targetUserId || !actorUserId) {
-    return response.status(400).json({ error: 'groupId, targetUserId e userId sao obrigatorios.' });
+    return response.status(400).json({ error: 'groupId, targetUserId e userId são obrigatórios.' });
   }
 
   const actorMembership = await getMembership(actorUserId, groupId);
@@ -330,17 +330,17 @@ router.post('/groups/:groupId/members/:targetUserId/expel', async (request, resp
   const targetMembership = await getMembership(targetUserId, groupId);
 
   if ((!actorMembership && !actorIsAdmin) || !targetMembership) {
-    return response.status(404).json({ error: 'Membro nao encontrado no grupo.' });
+    return response.status(404).json({ error: 'Membro não encontrado no grupo.' });
   }
 
   const actorRole = actorIsAdmin ? ROLE_ADMIN : actorMembership.role;
   if (!canActOnTarget(actorRole, targetMembership.role)) {
-    return response.status(403).json({ error: 'Sem permissao para expulsar este usuario.' });
+    return response.status(403).json({ error: 'Sem permissão para expulsar este usuário.' });
   }
 
   const targetUser = await findUserById(targetUserId);
   if (targetUser?.is_admin && !actorIsAdmin) {
-    return response.status(403).json({ error: 'Nao e possivel expulsar um admin.' });
+    return response.status(403).json({ error: 'Não é possível expulsar um admin.' });
   }
 
   const actorUser = await findUserById(actorUserId);
@@ -353,7 +353,7 @@ router.post('/groups/:groupId/members/:targetUserId/expel', async (request, resp
   await createSystemMessage(
     groupId,
     actorUserId,
-    `${targetUser?.name || 'Usuario'} foi expulso por ${actorUser?.name || 'moderacao'}.`,
+    `${targetUser?.name || 'Usuário'} foi expulso por ${actorUser?.name || 'moderação'}.`,
   );
 
   publishGroupEvent(groupId, 'group-update', { type: 'member-expelled', targetUserId });
@@ -368,7 +368,7 @@ router.patch('/groups/:groupId/members/:targetUserId/role', async (request, resp
   const nextRole = Number(request.body.role);
 
   if (!groupId || !targetUserId || !actorUserId || !isValidRole(nextRole)) {
-    return response.status(400).json({ error: 'groupId, targetUserId, userId e role validos sao obrigatorios.' });
+    return response.status(400).json({ error: 'groupId, targetUserId, userId e role válidos são obrigatórios.' });
   }
 
   const actorMembership = await getMembership(actorUserId, groupId);
@@ -376,7 +376,7 @@ router.patch('/groups/:groupId/members/:targetUserId/role', async (request, resp
   const targetMembership = await getMembership(targetUserId, groupId);
 
   if ((!actorMembership && !actorIsAdmin) || !targetMembership) {
-    return response.status(404).json({ error: 'Membro nao encontrado no grupo.' });
+    return response.status(404).json({ error: 'Membro não encontrado no grupo.' });
   }
 
   if (!actorIsAdmin) {
@@ -386,7 +386,7 @@ router.patch('/groups/:groupId/members/:targetUserId/role', async (request, resp
   const targetUser = await findUserById(targetUserId);
 
   if (targetUser?.is_admin && nextRole !== ROLE_ADMIN) {
-    return response.status(403).json({ error: 'Nao e possivel mudar admin para mod/membro por aqui.' });
+    return response.status(403).json({ error: 'Não é possível mudar admin para mod/membro por aqui.' });
   }
 
   if (nextRole === ROLE_ADMIN) {
@@ -408,7 +408,7 @@ router.patch('/groups/:groupId/members/:targetUserId/role', async (request, resp
   await createSystemMessage(
     groupId,
     actorUserId,
-    `${actorUser?.name || 'Admin'} alterou o cargo de ${targetUser?.name || 'usuario'} para ${roleLabel(nextRole)}.`,
+    `${actorUser?.name || 'Admin'} alterou o cargo de ${targetUser?.name || 'usuário'} para ${roleLabel(nextRole)}.`,
   );
 
   publishGroupEvent(groupId, 'group-update', { type: 'role-updated', targetUserId });
@@ -423,11 +423,11 @@ router.patch('/groups/:groupId', async (request, response) => {
   const description = request.body.description?.trim();
 
   if (!groupId || !actorUserId) {
-    return response.status(400).json({ error: 'groupId e userId sao obrigatorios.' });
+    return response.status(400).json({ error: 'groupId e userId são obrigatórios.' });
   }
 
   if (!name || !description) {
-    return response.status(400).json({ error: 'Nome e descricao sao obrigatorios.' });
+    return response.status(400).json({ error: 'Nome e descrição são obrigatórios.' });
   }
 
   const actorMembership = await getMembership(actorUserId, groupId);
@@ -448,7 +448,7 @@ router.patch('/groups/:groupId', async (request, response) => {
   );
 
   if (result.rows.length === 0) {
-    return response.status(404).json({ error: 'Grupo nao encontrado.' });
+    return response.status(404).json({ error: 'Grupo não encontrado.' });
   }
 
   const actorUser = await findUserById(actorUserId);
@@ -463,7 +463,7 @@ router.get('/groups/:id/messages', async (request, response) => {
   const userId = parseId(request.query.userId);
 
   if (!groupId || !userId) {
-    return response.status(400).json({ error: 'groupId e userId sao obrigatorios.' });
+    return response.status(400).json({ error: 'groupId e userId são obrigatórios.' });
   }
 
   const membership = await hasMembership(userId, groupId);
@@ -509,7 +509,7 @@ router.get('/members/:groupId', async (request, response) => {
   const userId = parseId(request.query.userId);
 
   if (!groupId || !userId) {
-    return response.status(400).json({ error: 'groupId e userId sao obrigatorios.' });
+    return response.status(400).json({ error: 'groupId e userId são obrigatórios.' });
   }
 
   const membership = await hasMembership(userId, groupId);
@@ -546,7 +546,7 @@ router.post('/messages', async (request, response) => {
   const content = request.body.content?.trim();
 
   if (!groupId || !userId || !content) {
-    return response.status(400).json({ error: 'groupId, userId e content sao obrigatorios.' });
+    return response.status(400).json({ error: 'groupId, userId e content são obrigatórios.' });
   }
 
   const membership = await hasMembership(userId, groupId);
@@ -556,7 +556,7 @@ router.post('/messages', async (request, response) => {
 
   const userMembership = await getMembership(userId, groupId);
   if (userMembership?.mutedUntil && new Date(userMembership.mutedUntil).getTime() > Date.now()) {
-    return response.status(403).json({ error: 'Voce esta mutado neste grupo e nao pode enviar mensagens.' });
+    return response.status(403).json({ error: 'Você está mutado neste grupo e não pode enviar mensagens.' });
   }
 
   const result = await query(

@@ -38,7 +38,7 @@ function MemberList({
       <h2>Membros</h2>
       <div className="sidebar-list">
         {members.length === 0 && (
-          <p className="sidebar-empty">Entre em um grupo para ver quem esta la dentro.</p>
+          <p className="sidebar-empty">Entre em um grupo para ver quem está lá dentro.</p>
         )}
 
         {members.map((member) => {
@@ -53,13 +53,13 @@ function MemberList({
                 type="button"
                 className="list-avatar-button"
                 onClick={() => setActiveMemberId((current) => (current === member.id ? null : member.id))}
-                aria-label={`Acoes de ${member.name}`}
+                aria-label={`Ações de ${member.name}`}
               >
                 <UserAvatar name={member.name} color={member.avatarColor} className="list-avatar" />
               </button>
 
               <div>
-                <strong>{isCurrentUser ? `${member.name} (Voce)` : member.name}</strong>
+                <strong>{isCurrentUser ? `${member.name} (Você)` : member.name}</strong>
                 <span className={`member-status ${member.status}`}>
                   {`${member.status === 'online' ? 'Online' : 'Offline'} - ${roleMap[memberRole] || 'Membro'}`}
                 </span>

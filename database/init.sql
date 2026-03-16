@@ -69,11 +69,12 @@ ADD COLUMN IF NOT EXISTS is_system BOOLEAN NOT NULL DEFAULT false;
 
 INSERT INTO groups (id, name, description, icon)
 VALUES
-  (1, 'Hangar', 'Discussao principal do grupo', '/src/assets/img/icon_group.png'),
-  (2, 'Pilotos', 'Canal para combinados da equipe de voo', '/src/assets/img/icon_group.png'),
-  (3, 'Torre', 'Avisos rapidos da operacao', '/src/assets/img/icon_group.png'),
-  (4, 'Meteorologia', 'Condicoes do tempo e previsoes', '/src/assets/img/icon_group.png'),
-  (5, 'Manutencao', 'Demandas tecnicas e suporte', '/src/assets/img/icon_group.png')
+  (1, 'Odeio acordar cedo', 'Pra quem negocia com o despertador todo santo dia.', '/src/assets/img/icon_group.png'),
+  (2, 'Abro a geladeira pra pensar', 'Você não está com fome, só em busca de respostas.', '/src/assets/img/icon_group.png'),
+  (3, 'Queria sorvete mas era feijão', 'Grupo de apoio para todas as decepções culinárias.', '/src/assets/img/icon_group.png'),
+  (4, 'Eu só vim pelo bolo', 'Presença confirmada em qualquer evento com comida grátis.', '/src/assets/img/icon_group.png'),
+  (5, 'Tenho preguiça até de ter preguiça', 'Nível máximo de cansaço com zero esforço envolvido.', '/src/assets/img/icon_group.png'),
+  (6, 'Não sou antissocial, só sem bateria social', 'Hoje não, pessoal. Talvez amanhã. Ou semana que vem.', '/src/assets/img/icon_group.png')
 ON CONFLICT (id) DO UPDATE
 SET name = EXCLUDED.name,
     description = EXCLUDED.description,

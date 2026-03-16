@@ -19,7 +19,7 @@ function GroupPickerModal({
         <div className="group-picker-header">
           <div>
             <h2>Escolha seus grupos</h2>
-            <p>Entre nos grupos que quer acompanhar. Voce pode sair de um grupo depois.</p>
+            <p>Entre nos grupos que quer acompanhar. Você pode sair de um grupo depois.</p>
           </div>
           <button
             type="button"
