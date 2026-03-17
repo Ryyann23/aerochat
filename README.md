@@ -1,61 +1,91 @@
 # AeroChat
 
-Aplicacao de chat em grupos com frontend React, API em Node.js/Express, PostgreSQL e arquitetura simples em microservicos com Docker Compose.
+Web app de chat em grupos com autenticação, perfil de usuário e mensagens em tempo real.
 
-## Estrutura
+## O que é o app
+
+O AeroChat é uma aplicação full stack onde o usuário pode:
+
+- criar conta e fazer login
+- entrar e sair de grupos
+- enviar mensagens no chat
+- editar informações do perfil
+- usar recursos de moderação (de acordo com permissão)
+
+## Linguagens e tecnologias
+
+- JavaScript (frontend e backend)
+- React 19 + Vite + Axios (frontend)
+- Node.js + Express + pg (backend)
+- PostgreSQL (banco de dados)
+- Docker Compose (ambiente local recomendado)
+
+## Estrutura do projeto
 
 ```text
-frontend/
-backend/
-database/
-docker-compose.yml
-README.md
+frontend/   # interface React
+backend/    # API Express
+database/   # SQL inicial
 ```
 
-## Servicos
+## Requisitos
 
-- frontend: interface React com Vite e Axios
-- backend: API Express com rotas de grupos, membros e mensagens
-- db: PostgreSQL com carga inicial de dados
+### Com Docker
 
-## Rotas da API
+- Docker Desktop
+- Docker Compose (comando docker compose)
 
-- GET /groups
-- GET /groups/:id/messages
-- GET /members/:groupId
-- POST /messages
+### Sem Docker
 
-Exemplo de payload para envio de mensagem:
+- Node.js 20+
+- npm 10+
+- PostgreSQL 16+
 
-```json
-{
-  "groupId": 1,
-  "userId": 1,
-  "content": "Mensagem de teste"
-}
-```
+## Como rodar com Docker (recomendado)
 
-## Como rodar com Docker
-
-Requisitos:
-
-- Docker
-- Docker Compose com o comando `docker compose`
-
-Suba os servicos na raiz do projeto:
+1. Na raiz do projeto, execute:
 
 ```bash
 docker compose up --build
 ```
 
-A aplicacao ficara disponivel em:
+2. Acesse:
 
 - Frontend: http://localhost:5173
 - Backend: http://localhost:3001
-- PostgreSQL: localhost:5432
+- Banco: localhost:5432
 
-## Observacoes
+3. Para parar:
 
-- O layout segue a referencia visual enviada, com tres colunas e painel central de chat.
-- Os assets de avatar e grupo estao em frontend/src/assets/img.
-- O banco sobe com grupos, membros e mensagens iniciais para a tela carregar pronta.
+```bash
+docker compose down
+```
+
+## Como rodar sem Docker
+
+1. Inicie o PostgreSQL e crie o banco aerochat.
+
+2. Backend:
+
+```bash
+cd backend
+npm install
+npm run dev
+```
+
+3. Frontend (novo terminal):
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+4. Acesse no navegador:
+
+- Frontend: http://localhost:5173
+
+## Rotas (resumo)
+
+- Auth: /auth/login, /auth/register
+- Grupos e mensagens: /groups, /members/:groupId, /messages
